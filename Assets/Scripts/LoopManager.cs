@@ -218,6 +218,11 @@ public class LoopManager : MonoBehaviour
             pastLoopRecordings.Clear();
         }
 
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayGameplayBGM();
+        }
+
         if (livePlayer != null)
         {
             livePlayer.SetStartGridPosition(playerStartPosition);
@@ -484,6 +489,12 @@ public class LoopManager : MonoBehaviour
             float delay = isFinal ? lm.finalWinTransitionDelay : lm.winTransitionDelay;
             Invoke(nameof(TransitionToNextLevel), delay);
         }
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayChestOpen();
+            AudioManager.Instance.PlayVictory(isFinal);
+        }
     }
 
     public void TransitionToNextLevel()
@@ -517,6 +528,7 @@ public class LoopManager : MonoBehaviour
             isGameOver = true;
             Debug.Log("<color=red>Loop limit reached. Game Over.</color>");
             if (gameOverPanel != null) gameOverPanel.SetActive(true);
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayGameOver();
         }
     }
 
@@ -542,6 +554,7 @@ public class LoopManager : MonoBehaviour
             isGameOver = true;
             Debug.Log("<color=red>Loop limit reached. Game Over.</color>");
             if (gameOverPanel != null) gameOverPanel.SetActive(true);
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayGameOver();
         }
     }
 

@@ -43,6 +43,11 @@ public class MoveCommand : ICommand
         }
 
         unit.SetGridPosition(target);
+
+        if (unit.GetComponent<PlayerInputHandler>() != null || (LoopManager.Instance != null && unit == LoopManager.Instance.livePlayer))
+        {
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayFootstep();
+        }
     }
 
     public string GetLabel()
@@ -59,6 +64,10 @@ public class WaitCommand : ICommand
 {
     public void Execute(Unit unit)
     {
+        if (unit.GetComponent<PlayerInputHandler>() != null || (LoopManager.Instance != null && unit == LoopManager.Instance.livePlayer))
+        {
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayWait();
+        }
     }
 
     public string GetLabel()
@@ -83,7 +92,10 @@ public class AttackCommand : ICommand
         PlayerCombat combat = unit.GetComponent<PlayerCombat>() ?? Object.FindFirstObjectByType<PlayerCombat>();
         if (combat != null)
         {
-            combat.PerformAttack();
+            if (combat.PerformAttack())
+            {
+                if (AudioManager.Instance != null) AudioManager.Instance.PlaySwordSwing();
+            }
         }
     }
 

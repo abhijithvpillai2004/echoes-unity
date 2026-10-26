@@ -124,11 +124,13 @@ public class PlayerHealth : MonoBehaviour
                 Debug.Log("<color=red>Player has run out of hearts in the final loop! GAME OVER.</color>");
                 lm.isGameOver = true;
                 if (lm.gameOverPanel != null) lm.gameOverPanel.SetActive(true);
+                if (AudioManager.Instance != null) AudioManager.Instance.PlayGameOver();
             }
         }
         else
         {
             Debug.Log("<color=red>Player has run out of hearts! GAME OVER.</color>");
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayGameOver();
         }
     }
 }

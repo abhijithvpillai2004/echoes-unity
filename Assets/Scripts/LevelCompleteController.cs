@@ -60,6 +60,10 @@ public class LevelCompleteController : MonoBehaviour
         SpawnRunnerParty();
 
         // 5. Start Sequence
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayLevelTransitionSFX();
+        }
         StartCoroutine(RunTransitionSequence());
     }
 

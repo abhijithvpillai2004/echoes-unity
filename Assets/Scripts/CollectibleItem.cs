@@ -43,6 +43,7 @@ public class CollectibleItem : MonoBehaviour
         if (dist > 1) return false;
 
         isCollected = true;
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayItemCollect();
 
         if (itemType == ItemType.Weapon)
         {
