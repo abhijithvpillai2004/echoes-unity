@@ -286,11 +286,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bd415811877dd348994fd5835d6485e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minX: -2
+  homePos: {x: 0, y: 1}
+  minYThreshold: -1
+  minX: -1
   maxX: 1
-  yRow: 1
-  startPos: {x: -2, y: 1}
-  startDirection: 1
 --- !u!212 &28964308
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -355,7 +354,7 @@ Transform:
   m_GameObject: {fileID: 28964305}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5, y: 1.5, z: 0}
+  m_LocalPosition: {x: -0.5, y: 1.5, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -855,9 +854,11 @@ MonoBehaviour:
   wallCells:
   - {x: -1, y: 0}
   - {x: 0, y: 0}
+  - {x: 1, y: 0}
   wallObjects:
   - {fileID: 276752949}
   - {fileID: 1567501158}
+  - {fileID: 653401697}
 --- !u!212 &276752951
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3707,11 +3708,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 702402377424605037, guid: a382e1e7ccf17e04e9f8f41cb40481b9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.5
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 702402377424605037, guid: a382e1e7ccf17e04e9f8f41cb40481b9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.5
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 702402377424605037, guid: a382e1e7ccf17e04e9f8f41cb40481b9, type: 3}
       propertyPath: m_LocalPosition.z
