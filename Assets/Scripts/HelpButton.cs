@@ -88,7 +88,6 @@ public class HelpButton : MonoBehaviour
 
     public void ToggleHelp()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonClick();
         if (popupPanel == null) return;
         bool newState = !popupPanel.activeSelf;
         popupPanel.SetActive(newState);
@@ -102,7 +101,6 @@ public class HelpButton : MonoBehaviour
 
     public void OpenHelp()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonClick();
         if (popupPanel != null)
         {
             popupPanel.SetActive(true);
@@ -114,7 +112,6 @@ public class HelpButton : MonoBehaviour
 
     public void CloseHelp()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonClick();
         if (popupPanel != null)
         {
             popupPanel.SetActive(false);

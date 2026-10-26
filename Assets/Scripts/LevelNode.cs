@@ -161,7 +161,6 @@ public class LevelNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     private void OnNodeClicked()
     {
         if (!isUnlocked) return;
-        if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonClick();
         if (LevelSelectManager.Instance != null)
         {
             LevelSelectManager.Instance.SelectLevel(this);

@@ -49,7 +49,6 @@ public class TitleScreenController : MonoBehaviour
     private void StartGame()
     {
         hasStarted = true;
-        if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonClick();
         StartCoroutine(TransitionToFirstLevel());
     }
 

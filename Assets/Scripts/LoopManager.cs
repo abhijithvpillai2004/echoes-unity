@@ -191,11 +191,6 @@ public class LoopManager : MonoBehaviour
         isGameOver = false;
         isGameWon = false;
 
-        if (loopIndex > 1 && AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayLoopReset();
-        }
-
         if (loopIndex == 1)
         {
             pastLoopRecordings.Clear();
@@ -445,11 +440,6 @@ public class LoopManager : MonoBehaviour
     {
         isGameWon = true;
         Debug.Log("<color=green>WINNER! Chest reached!</color>");
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayWin();
-            AudioManager.Instance.PlayChestOpen();
-        }
         
         LevelManager lm = LevelManager.Instance ?? Object.FindFirstObjectByType<LevelManager>();
         bool isFinal = (lm != null && lm.IsFinalLevel()) || UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Equals("Level5", System.StringComparison.OrdinalIgnoreCase);
@@ -511,11 +501,6 @@ public class LoopManager : MonoBehaviour
         {
             isGameOver = true;
             Debug.Log("<color=red>Loop limit reached. Game Over.</color>");
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlayPlayerDeath();
-                AudioManager.Instance.PlayGameOver();
-            }
             if (gameOverPanel != null) gameOverPanel.SetActive(true);
         }
     }
@@ -541,11 +526,6 @@ public class LoopManager : MonoBehaviour
         {
             isGameOver = true;
             Debug.Log("<color=red>Loop limit reached. Game Over.</color>");
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlayPlayerDeath();
-                AudioManager.Instance.PlayGameOver();
-            }
             if (gameOverPanel != null) gameOverPanel.SetActive(true);
         }
     }

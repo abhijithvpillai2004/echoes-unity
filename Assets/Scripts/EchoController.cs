@@ -23,10 +23,6 @@ public class EchoController : MonoBehaviour
             unit.isEcho = true;
             unit.SetStartGridPosition(startPosition);
         }
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayEchoReplayStart();
-        }
     }
 
     public void Initialize(List<ICommand> recordedActions)
@@ -38,10 +34,6 @@ public class EchoController : MonoBehaviour
         {
             unit.isEcho = true;
             unit.ResetUnit();
-        }
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayEchoReplayStart();
         }
     }
 

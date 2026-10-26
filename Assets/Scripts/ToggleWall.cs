@@ -39,17 +39,11 @@ public class ToggleWall : MonoBehaviour
                 GridManager.Instance.SetWalkable(cell, true);
         }
 
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayDoorOpen();
-        }
-
         Debug.Log("Wall opened!");
     }
 
     public void Close()
     {
-        bool wasOpen = isOpen;
         isOpen = false;
 
         if (wallObjects != null)
@@ -62,11 +56,6 @@ public class ToggleWall : MonoBehaviour
         {
             foreach (Vector2Int cell in wallCells)
                 GridManager.Instance.SetWalkable(cell, false);
-        }
-
-        if (wasOpen && AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayDoorClose();
         }
 
         Debug.Log("Wall closed!");

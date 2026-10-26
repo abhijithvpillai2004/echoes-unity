@@ -68,10 +68,6 @@ public class PlayerCombat : MonoBehaviour
         {
             weaponVisual.SetActive(true);
         }
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayWeaponPickup();
-        }
     }
 
     public bool PerformAttack()
@@ -108,10 +104,6 @@ public class PlayerCombat : MonoBehaviour
 
         if (hitAny)
         {
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlayAttackHit();
-            }
             StartCoroutine(WeaponSwingVisual());
         }
         else

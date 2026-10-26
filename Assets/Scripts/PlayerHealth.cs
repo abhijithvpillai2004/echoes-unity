@@ -72,11 +72,6 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log($"<color=red>Player took {damage} damage! Current HP: {currentHP}/{maxHP}</color>");
         UpdateHeartsUI();
 
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayPlayerTakeDamage();
-        }
-
         if (currentHP <= 0)
         {
             Die();

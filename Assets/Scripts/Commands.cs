@@ -43,11 +43,6 @@ public class MoveCommand : ICommand
         }
 
         unit.SetGridPosition(target);
-
-        if (unit != null && !unit.isEcho && AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayFootstep();
-        }
     }
 
     public string GetLabel()
@@ -64,10 +59,6 @@ public class WaitCommand : ICommand
 {
     public void Execute(Unit unit)
     {
-        if (unit != null && !unit.isEcho && AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayWait();
-        }
     }
 
     public string GetLabel()

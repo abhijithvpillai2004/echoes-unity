@@ -121,10 +121,6 @@ public class CombatEnemy : MonoBehaviour
                     {
                         transform.position = GridManager.Instance.GridToWorld(currentPos);
                     }
-                    if (AudioManager.Instance != null)
-                    {
-                        AudioManager.Instance.PlayEnemyMove();
-                    }
                 }
             }
             return;
@@ -175,10 +171,6 @@ public class CombatEnemy : MonoBehaviour
             if (GridManager.Instance != null)
             {
                 transform.position = GridManager.Instance.GridToWorld(currentPos);
-            }
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlayEnemyMove();
             }
         }
     }
@@ -297,19 +289,11 @@ public class CombatEnemy : MonoBehaviour
         if (currentEnemyHP <= 0)
         {
             isDead = true;
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlayEnemyDeath();
-            }
             Debug.Log("<color=green>Enemy was slain by the player's weapon!</color>");
             StartCoroutine(DeathFadeOut());
         }
         else
         {
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlayBossHit();
-            }
             Debug.Log($"<color=yellow>Boss took a hit! HP remaining: {currentEnemyHP}/{maxEnemyHP}</color>");
             StartCoroutine(DamageFlash());
         }

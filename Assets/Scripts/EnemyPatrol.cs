@@ -71,9 +71,5 @@ public class EnemyPatrol : MonoBehaviour
         {
             transform.position = GridManager.Instance.GridToWorld(currentPos);
         }
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayEnemyMove();
-        }
     }
 }

@@ -25,9 +25,6 @@ public class LevelSelectManager : MonoBehaviour
     public Button resetProgressButton;
     public CanvasGroup fadeCanvasGroup;
 
-    [Header("Sound (Optional)")]
-    public AudioSource ambientAudio;
-
     private bool isTransitioning = false;
 
     private void Awake()
@@ -50,7 +47,6 @@ public class LevelSelectManager : MonoBehaviour
 
     private void Start()
     {
-        SetupAmbientAudio();
         if (levelNodes == null || levelNodes.Length == 0)
         {
             levelNodes = FindObjectsByType<LevelNode>(FindObjectsSortMode.None);
@@ -253,7 +249,6 @@ public class LevelSelectManager : MonoBehaviour
 
     public void OnBackClicked()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonClick();
         if (isTransitioning) return;
         isTransitioning = true;
         StartCoroutine(TransitionToScene("TitleScreen"));
@@ -294,7 +289,6 @@ public class LevelSelectManager : MonoBehaviour
 
     public void ResetProgress()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlayButtonClick();
         PlayerPrefs.SetInt("HighestUnlockedLevel", 1);
         for (int i = 1; i <= 10; i++)
         {
@@ -363,15 +357,4 @@ public class LevelSelectManager : MonoBehaviour
             }
         }
     }
-    private void SetupAmbientAudio()
-    {
-        // Procedural synthetic buzzing audio removed as requested.
-        // ambientAudio field remains available in the Inspector if an ambient track is assigned.
-        if (ambientAudio != null && ambientAudio.clip != null)
-        {
-            ambientAudio.loop = true;
-            ambientAudio.Play();
-        }
-    }
-
 }

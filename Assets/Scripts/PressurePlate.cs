@@ -58,10 +58,6 @@ public class PressurePlate : MonoBehaviour
         if (anyUnitOnPlate && !isPressed)
         {
             isPressed = true;
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlayPressurePlateActivate();
-            }
             if (linkedWall != null) linkedWall.Open();
             if (linkedTraps != null)
             {
@@ -72,10 +68,6 @@ public class PressurePlate : MonoBehaviour
         else if (!anyUnitOnPlate && isPressed)
         {
             isPressed = false;
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlayPressurePlateDeactivate();
-            }
             if (linkedWall != null) linkedWall.Close();
             if (linkedTraps != null)
             {
