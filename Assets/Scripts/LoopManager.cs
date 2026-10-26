@@ -191,6 +191,28 @@ public class LoopManager : MonoBehaviour
         isGameOver = false;
         isGameWon = false;
 
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
+        else
+        {
+            GameObject gop = GameObject.Find("GameOverText") ?? GameObject.Find("GameOverPanel");
+            if (gop != null)
+            {
+                gameOverPanel = gop;
+                gameOverPanel.SetActive(false);
+            }
+        }
+
+        if (winPanel != null) winPanel.SetActive(false);
+        else
+        {
+            GameObject wp = GameObject.Find("WinText") ?? GameObject.Find("WinPanel");
+            if (wp != null)
+            {
+                winPanel = wp;
+                winPanel.SetActive(false);
+            }
+        }
+
         if (loopIndex == 1)
         {
             pastLoopRecordings.Clear();
@@ -419,15 +441,8 @@ public class LoopManager : MonoBehaviour
 
         if (livePlayer != null && livePlayer.GridPosition == chestGridPos)
         {
-            if (currentLoop >= maxLoops)
-            {
-                HandleWin();
-                return;
-            }
-            else
-            {
-                Debug.Log($"<color=yellow>The chest is sealed by time magic! You must use all {maxLoops - 1} echoes across all {maxLoops} loops to break the seal!</color>");
-            }
+            HandleWin();
+            return;
         }
 
         if (currentTurn >= turnsPerLoop)
