@@ -2,13 +2,21 @@ using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
 {
-    [Header("Guard Configuration")]
+    [Header("Mode")]
+    public bool isSentinel = false;
+
+    [Header("Sentinel / Blocker Mode (Level 2)")]
     public Vector2Int homePos = new Vector2Int(0, 1);
-    public int minYThreshold = -1; // Only react to units near the corridor (y >= -1), ignore pressure plate at y = -2
-    public int minX = -1;
-    public int maxX = 1;
+    public int minYThreshold = -1; // Only react to units near the corridor (y >= -1)
+
+    [Header("Patrol Boundaries (Grid)")]
+    public Vector2Int startPos = new Vector2Int(0, 0);
+    public int startDirection = -1; // -1 = Left, 1 = Right
+    public int minX = -2;
+    public int maxX = 2;
 
     private Vector2Int currentPos;
+    private int currentDir = -1;
     private SpriteRenderer spriteRenderer;
 
     public Vector2Int GetGridPosition() => currentPos;
@@ -25,7 +33,8 @@ public class EnemyPatrol : MonoBehaviour
 
     public void ResetToStart()
     {
-        currentPos = homePos;
+        currentPos = isSentinel ? homePos : startPos;
+        currentDir = startDirection;
         if (GridManager.Instance != null)
         {
             transform.position = GridManager.Instance.GridToWorld(currentPos);
@@ -33,16 +42,27 @@ public class EnemyPatrol : MonoBehaviour
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
         {
-            spriteRenderer.flipX = false;
+            spriteRenderer.flipX = (currentDir > 0);
         }
     }
 
     public void StepTurn()
     {
+        if (isSentinel)
+        {
+            StepSentinel();
+        }
+        else
+        {
+            StepPatrol();
+        }
+    }
+
+    private void StepSentinel()
+    {
         Unit[] allUnits = Object.FindObjectsByType<Unit>(FindObjectsSortMode.None);
 
         // 1. Find the target to mirror / block
-        // IMPORTANT: Ignore any unit at y < minYThreshold (e.g. Echo 1 on the pressure plate at y = -2)
         Unit target = null;
         int highestPriority = int.MinValue;
 
@@ -50,12 +70,9 @@ public class EnemyPatrol : MonoBehaviour
         {
             if (u == null || !u.gameObject.activeInHierarchy) continue;
 
-            // Only react to intruders near the door / corridor
             if (u.GridPosition.y >= minYThreshold)
             {
-                // Echo decoys get highest priority so the live player can slip through in Loop 3!
                 int priority = u.isEcho ? 100 : 10;
-                // Secondary factor: closer Y row has higher priority
                 priority += u.GridPosition.y;
 
                 if (priority > highestPriority)
@@ -84,7 +101,6 @@ public class EnemyPatrol : MonoBehaviour
                 }
             }
 
-            // Face the direction of the target if adjacent
             if (spriteRenderer != null && dirX != 0)
             {
                 spriteRenderer.flipX = (dirX > 0);
@@ -92,7 +108,7 @@ public class EnemyPatrol : MonoBehaviour
             return;
         }
 
-        // 3. No target near the corridor: stay at or return to homePos (0, 1)
+        // 3. No target near the corridor: stay at or return to homePos
         if (currentPos != homePos)
         {
             int dirToHome = System.Math.Sign(homePos.x - currentPos.x);
@@ -106,6 +122,32 @@ public class EnemyPatrol : MonoBehaviour
                     spriteRenderer.flipX = (dirToHome > 0);
                 }
             }
+        }
+    }
+
+    private void StepPatrol()
+    {
+        Unit[] allUnits = Object.FindObjectsByType<Unit>(FindObjectsSortMode.None);
+
+        Vector2Int nextPos = currentPos + new Vector2Int(currentDir, 0);
+
+        if (nextPos.x < minX || nextPos.x > maxX)
+        {
+            currentDir *= -1;
+            nextPos = currentPos + new Vector2Int(currentDir, 0);
+        }
+
+        if (IsTileWalkableAndFree(nextPos, allUnits))
+        {
+            currentPos = nextPos;
+            UpdatePosition();
+            if (spriteRenderer != null) spriteRenderer.flipX = (currentDir > 0);
+        }
+        else
+        {
+            // Bounced by unit or obstacle
+            currentDir *= -1;
+            if (spriteRenderer != null) spriteRenderer.flipX = (currentDir > 0);
         }
     }
 
