@@ -68,6 +68,7 @@ public class PlayerCombat : MonoBehaviour
         {
             weaponVisual.SetActive(true);
         }
+        CombatEnemy.AlertAll();
     }
 
     public bool PerformAttack()
@@ -94,6 +95,13 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if (e.GetGridPosition() == pPos + dir)
                     {
+                        if (e.isShielded)
+                        {
+                            Debug.Log("<color=cyan>The Sentry's magical shield deflected your blade! Deactivate the shield disruptor plate first.</color>");
+                            e.OnShieldDeflect();
+                            hitAny = true;
+                            break;
+                        }
                         e.Die();
                         hitAny = true;
                         break;

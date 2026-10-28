@@ -286,10 +286,20 @@ public class LoopManager : MonoBehaviour
             if (tw != null) tw.ResetWall();
         }
 
+        if (Level4CombatController.Instance != null)
+        {
+            Level4CombatController.Instance.ResetState();
+        }
+
         if (pressurePlates == null) pressurePlates = Object.FindObjectsByType<PressurePlate>(FindObjectsSortMode.None);
         foreach (var p in pressurePlates)
         {
             if (p != null) p.ResetPlate();
+        }
+
+        if (Level4CombatController.Instance != null)
+        {
+            Level4CombatController.Instance.EvaluateDoorState();
         }
 
         TrapTile[] traps = Object.FindObjectsByType<TrapTile>(FindObjectsSortMode.None);
@@ -394,6 +404,14 @@ public class LoopManager : MonoBehaviour
                 if (p != null) p.EvaluatePlate();
             }
         }
+        if (Level5BossController.Instance != null)
+        {
+            Level5BossController.Instance.EvaluateBossDoorState();
+        }
+        if (Level4CombatController.Instance != null)
+        {
+            Level4CombatController.Instance.EvaluateDoorState();
+        }
 
         // 3. Execute live player command
         cmd.Execute(livePlayer);
@@ -401,16 +419,20 @@ public class LoopManager : MonoBehaviour
         if (recorder != null) recorder.Record(cmd);
 
         // 4. Evaluate pressure plates and boss events
-        if (Level5BossController.Instance != null)
-        {
-            Level5BossController.Instance.EvaluateBossDoorState();
-        }
         if (pressurePlates != null)
         {
             foreach (var p in pressurePlates)
             {
                 if (p != null) p.EvaluatePlate();
             }
+        }
+        if (Level5BossController.Instance != null)
+        {
+            Level5BossController.Instance.EvaluateBossDoorState();
+        }
+        if (Level4CombatController.Instance != null)
+        {
+            Level4CombatController.Instance.EvaluateDoorState();
         }
 
         // Check spike trap tiles for live player

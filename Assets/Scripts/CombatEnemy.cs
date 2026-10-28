@@ -17,6 +17,15 @@ public class CombatEnemy : MonoBehaviour
     public int patrolDirection = 1; // 1 = moving right, -1 = moving left
     public int minPatrolX = -4;
     public int maxPatrolX = 3;
+    public bool isAlerted = false;
+    [Header("Shield Config")]
+    public bool isShielded = false;
+    private static readonly Color ShieldColor = new Color(0.4f, 0.85f, 1f, 1f); // Magic cyan
+    private static readonly Color NormalColor = Color.white;
+    private static float lastShieldDownSFXTime = -10f;
+
+    private GameObject shieldVisual;
+    private SpriteRenderer barrierBubbleRenderer;
 
     private Vector2Int currentPos;
     private bool isDead = false;
@@ -24,6 +33,251 @@ public class CombatEnemy : MonoBehaviour
 
     public bool IsDead => isDead;
     public Vector2Int GetGridPosition() => currentPos;
+
+    public void SetShielded(bool shielded)
+    {
+        if (isDead) return;
+        bool wasShielded = isShielded;
+        isShielded = shielded;
+        EnsureShieldVisual();
+
+        if (wasShielded && !shielded)
+        {
+            // Trigger shield shatter / glass scattering animation
+            PlayShieldShatter();
+        }
+        else
+        {
+            if (shieldVisual != null)
+            {
+                shieldVisual.SetActive(isShielded);
+            }
+        }
+
+        if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = isShielded ? ShieldColor : NormalColor;
+        }
+    }
+
+    private void PlayShieldShatter()
+    {
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(ShieldShatterRoutine());
+        }
+        else
+        {
+            if (shieldVisual != null) shieldVisual.SetActive(false);
+        }
+    }
+
+    private System.Collections.IEnumerator ShieldShatterRoutine()
+    {
+        // 1. Brief soft flash on the honeycomb barrier before it dissolves
+        if (barrierBubbleRenderer != null)
+        {
+            barrierBubbleRenderer.color = new Color(1.3f, 1.3f, 1.3f, 1f);
+        }
+        yield return new WaitForSeconds(0.04f);
+
+        if (shieldVisual != null)
+        {
+            shieldVisual.SetActive(false);
+        }
+
+        // 2. Spawn crystal shards that gently float and scatter outward
+        GameObject fxParent = new GameObject("ShieldShatterFX");
+        fxParent.transform.position = transform.position;
+
+        // Play shield down SFX (debounced so simultaneous guards don't stack volume)
+        if (Time.time - lastShieldDownSFXTime > 0.15f)
+        {
+            lastShieldDownSFXTime = Time.time;
+            AudioClip sfxClip = Resources.Load<AudioClip>("Audio/SFX/SFX_ShieldDown");
+            if (sfxClip != null)
+            {
+                AudioSource.PlayClipAtPoint(sfxClip, transform.position, 0.85f);
+            }
+        }
+
+        Sprite shardSprite = Resources.Load<Sprite>("shield_shard");
+        int shardCount = 12;
+        List<Transform> shards = new List<Transform>();
+        List<Vector2> velocities = new List<Vector2>();
+        List<float> rotSpeeds = new List<float>();
+        List<Vector3> initialScales = new List<Vector3>();
+
+        for (int i = 0; i < shardCount; i++)
+        {
+            GameObject s = new GameObject("Shard_" + i);
+            s.transform.SetParent(fxParent.transform, false);
+
+            float startAngle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+            float startDist = Random.Range(0.03f, 0.20f);
+            s.transform.localPosition = new Vector3(Mathf.Cos(startAngle) * startDist, Mathf.Sin(startAngle) * startDist, 0f);
+
+            Vector3 initScale = Vector3.one * Random.Range(0.22f, 0.38f);
+            s.transform.localScale = initScale;
+            initialScales.Add(initScale);
+
+            SpriteRenderer sr = s.AddComponent<SpriteRenderer>();
+            sr.sprite = shardSprite;
+            sr.sortingOrder = 14;
+            sr.color = new Color(0.25f, 0.85f, 1f, 0.95f);
+
+            // Gentle, smooth outward drift
+            float speed = Random.Range(0.6f, 1.3f);
+            float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+            velocities.Add(new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * speed);
+            rotSpeeds.Add(Random.Range(-120f, 120f));
+            shards.Add(s.transform);
+        }
+
+        // 3. Smoothly animate scattering shards: gentle drift, subtle damping, and soft fade
+        float duration = 0.60f;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            // Smooth ease-out fade
+            float currentAlpha = Mathf.SmoothStep(0.95f, 0f, t);
+
+            for (int i = 0; i < shards.Count; i++)
+            {
+                if (shards[i] == null) continue;
+                Vector3 pos = shards[i].localPosition;
+                Vector2 vel = velocities[i];
+
+                // Gentle air resistance / damping for smooth floating motion
+                vel *= Mathf.Clamp01(1f - 0.8f * Time.deltaTime);
+                velocities[i] = vel;
+
+                pos += (Vector3)vel * Time.deltaTime;
+                shards[i].localPosition = pos;
+                shards[i].Rotate(0f, 0f, rotSpeeds[i] * Time.deltaTime);
+                shards[i].localScale = initialScales[i] * Mathf.Lerp(1f, 0.45f, t);
+
+                SpriteRenderer sr = shards[i].GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    Color c = sr.color;
+                    c.a = currentAlpha;
+                    sr.color = c;
+                }
+            }
+            yield return null;
+        }
+
+        Destroy(fxParent);
+    }
+
+    private void EnsureShieldVisual()
+    {
+        if (shieldVisual == null)
+        {
+            Transform existing = transform.Find("ShieldVisual");
+            if (existing != null) shieldVisual = existing.gameObject;
+        }
+
+        if (shieldVisual == null)
+        {
+            shieldVisual = new GameObject("ShieldVisual");
+            shieldVisual.transform.SetParent(transform, false);
+            shieldVisual.transform.localPosition = Vector3.zero;
+
+            // Honeycomb Forcefield enclosing the body
+            GameObject bubble = new GameObject("BarrierBubble");
+            bubble.transform.SetParent(shieldVisual.transform, false);
+            bubble.transform.localPosition = Vector3.zero;
+            bubble.transform.localScale = Vector3.one * 1.0f;
+
+            barrierBubbleRenderer = bubble.AddComponent<SpriteRenderer>();
+            Sprite wardSp = Resources.Load<Sprite>("honeycomb_shield");
+            if (wardSp == null)
+            {
+                Sprite[] allSp = Resources.LoadAll<Sprite>("honeycomb_shield");
+                if (allSp != null && allSp.Length > 0) wardSp = allSp[0];
+            }
+            if (wardSp == null) wardSp = Resources.Load<Sprite>("ward_diamond");
+            barrierBubbleRenderer.sprite = wardSp;
+            barrierBubbleRenderer.color = Color.white;
+            barrierBubbleRenderer.sortingOrder = 12;
+        }
+
+        // Clean up any old ShieldIcon if present from previous iterations
+        if (shieldVisual != null)
+        {
+            Transform oldIcon = shieldVisual.transform.Find("ShieldIcon");
+            if (oldIcon != null)
+            {
+                Destroy(oldIcon.gameObject);
+            }
+        }
+
+        if (barrierBubbleRenderer == null && shieldVisual != null)
+        {
+            barrierBubbleRenderer = shieldVisual.transform.Find("BarrierBubble")?.GetComponent<SpriteRenderer>();
+        }
+    }
+
+    private void Update()
+    {
+        if (isShielded && shieldVisual != null && shieldVisual.activeSelf && !isDead)
+        {
+            // Distinct energy breathing & humming pulse on the honeycomb barrier
+            float wave = 0.5f + 0.5f * Mathf.Sin(Time.time * 3.0f);
+            float shimmer = Mathf.Sin(Time.time * 12.0f) * 0.04f;
+
+            // Modulate brightness from calm energy (0.72x) to radiant electric surge (1.35x)
+            float glow = Mathf.Lerp(0.72f, 1.35f, wave) + shimmer;
+            float alpha = Mathf.Lerp(0.65f, 1.00f, wave);
+
+            // Rich cyan surge at peak brightness
+            float r = glow * 0.88f;
+            float g = glow * 1.05f;
+            float b = glow * 1.22f;
+
+            if (barrierBubbleRenderer != null)
+            {
+                barrierBubbleRenderer.color = new Color(r, g, b, alpha);
+                barrierBubbleRenderer.transform.localScale = Vector3.one;
+            }
+        }
+    }
+
+    public void OnShieldDeflect()
+    {
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(FlashShieldDeflect());
+        }
+    }
+
+    private System.Collections.IEnumerator FlashShieldDeflect()
+    {
+        EnsureShieldVisual();
+        if (barrierBubbleRenderer != null)
+        {
+            barrierBubbleRenderer.color = new Color(1.5f, 1.5f, 1.5f, 1f);
+            barrierBubbleRenderer.transform.localScale = Vector3.one;
+        }
+        if (spriteRenderer != null) spriteRenderer.color = Color.white;
+
+        yield return new WaitForSeconds(0.14f);
+
+        if (barrierBubbleRenderer != null)
+        {
+            barrierBubbleRenderer.color = Color.white;
+            barrierBubbleRenderer.transform.localScale = Vector3.one * 1.0f;
+        }
+        if (spriteRenderer != null && !isDead)
+        {
+            spriteRenderer.color = isShielded ? ShieldColor : NormalColor;
+        }
+    }
 
     private void Awake()
     {
@@ -37,7 +291,11 @@ public class CombatEnemy : MonoBehaviour
 
     public void ResetToStart()
     {
+        StopAllCoroutines();
         isDead = false;
+        isAlerted = false;
+        isShielded = false;
+        if (shieldVisual != null) shieldVisual.SetActive(false);
         hitCount = 0;
         currentEnemyHP = maxEnemyHP;
         currentPos = startPos;
@@ -58,6 +316,21 @@ public class CombatEnemy : MonoBehaviour
         }
     }
 
+    public void Alert()
+    {
+        if (isDead) return;
+        isAlerted = true;
+    }
+
+    public static void AlertAll()
+    {
+        CombatEnemy[] all = Object.FindObjectsByType<CombatEnemy>(FindObjectsSortMode.None);
+        foreach (var e in all)
+        {
+            if (e != null) e.Alert();
+        }
+    }
+
     public void StepTurn()
     {
         if (isDead) return;
@@ -71,6 +344,7 @@ public class CombatEnemy : MonoBehaviour
         foreach (var u in allUnits)
         {
             if (u == null || !u.gameObject.activeInHierarchy) continue;
+            if (isRowPatroller && !isAlerted && u.GridPosition.y != currentPos.y) continue;
             int d = Mathf.Abs(u.GridPosition.x - currentPos.x) + Mathf.Abs(u.GridPosition.y - currentPos.y);
             if (d == 1)
             {
@@ -91,8 +365,8 @@ public class CombatEnemy : MonoBehaviour
             return;
         }
 
-        // 2. If configured to patrol only in its row alone
-        if (isRowPatroller)
+        // 2. If configured to patrol only in its row alone (and not currently alerted)
+        if (isRowPatroller && !isAlerted)
         {
             Vector2Int candidate = currentPos + new Vector2Int(patrolDirection, 0);
             if (candidate.x < minPatrolX || candidate.x > maxPatrolX || !IsTileWalkableForEnemy(candidate))
@@ -121,6 +395,7 @@ public class CombatEnemy : MonoBehaviour
                     {
                         transform.position = GridManager.Instance.GridToWorld(currentPos);
                     }
+                    PlaySlimeMoveSound();
                 }
             }
             return;
@@ -137,8 +412,12 @@ public class CombatEnemy : MonoBehaviour
             List<Vector2Int> path = FindPath(currentPos, u.GridPosition);
             if (path == null || path.Count == 0) continue;
 
-            // Score: shorter path is prioritized; Echo decoys act as strong sacrificial lures
+            // Score: shorter path is prioritized; when alerted, strongly prioritize live armed player
             int score = path.Count * 2 - (u.isEcho ? 6 : 0);
+            if (isAlerted && !u.isEcho)
+            {
+                score -= 30; // Strongly chase the live armed player!
+            }
 
             if (score < bestScore)
             {
@@ -171,6 +450,35 @@ public class CombatEnemy : MonoBehaviour
             if (GridManager.Instance != null)
             {
                 transform.position = GridManager.Instance.GridToWorld(currentPos);
+            }
+            PlaySlimeMoveSound();
+        }
+    }
+
+    private static AudioClip[] slimeMoveClips = null;
+    private static float lastSlimeMoveSoundTime = -10f;
+
+    private void PlaySlimeMoveSound()
+    {
+        if (slimeMoveClips == null || slimeMoveClips.Length == 0)
+        {
+            slimeMoveClips = new AudioClip[] {
+                Resources.Load<AudioClip>("Audio/SFX/SFX_SlimeMove_1"),
+                Resources.Load<AudioClip>("Audio/SFX/SFX_SlimeMove_2"),
+                Resources.Load<AudioClip>("Audio/SFX/SFX_SlimeMove_3"),
+                Resources.Load<AudioClip>("Audio/SFX/SFX_SlimeMove_4")
+            };
+        }
+
+        if (Time.time - lastSlimeMoveSoundTime > 0.08f)
+        {
+            lastSlimeMoveSoundTime = Time.time;
+            int rIdx = Random.Range(0, slimeMoveClips.Length);
+            AudioClip clip = slimeMoveClips[rIdx];
+            if (clip == null) clip = Resources.Load<AudioClip>("Audio/SFX/SFX_SlimeMove");
+            if (clip != null)
+            {
+                AudioSource.PlayClipAtPoint(clip, transform.position, 0.70f);
             }
         }
     }
@@ -289,6 +597,7 @@ public class CombatEnemy : MonoBehaviour
         if (currentEnemyHP <= 0)
         {
             isDead = true;
+            if (shieldVisual != null) shieldVisual.SetActive(false);
             Debug.Log("<color=green>Enemy was slain by the player's weapon!</color>");
             StartCoroutine(DeathFadeOut());
         }

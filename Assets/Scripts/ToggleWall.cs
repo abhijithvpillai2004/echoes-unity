@@ -10,7 +10,7 @@ public class ToggleWall : MonoBehaviour
     public Vector2Int[] wallCells;
     public GameObject[] wallObjects; // drag Wall + Wall2 here
     [Header("Timing")]
-    public float openDelay = 0.2f;
+    public float openDelay = 0f;
 
     private bool isOpen = false;
 

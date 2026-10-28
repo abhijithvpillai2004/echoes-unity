@@ -96,6 +96,7 @@ public class HelpButton : MonoBehaviour
             InitializeDefaultControls();
             RefreshHelpUI();
             popupPanel.transform.SetAsLastSibling();
+            if (LevelInfoButton.Instance != null) LevelInfoButton.Instance.CloseInfo();
         }
     }
 
@@ -107,6 +108,7 @@ public class HelpButton : MonoBehaviour
             InitializeDefaultControls();
             RefreshHelpUI();
             popupPanel.transform.SetAsLastSibling();
+            if (LevelInfoButton.Instance != null) LevelInfoButton.Instance.CloseInfo();
         }
     }
 

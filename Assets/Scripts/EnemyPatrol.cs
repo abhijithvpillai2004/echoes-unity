@@ -167,11 +167,40 @@ public class EnemyPatrol : MonoBehaviour
         return true;
     }
 
+    private static AudioClip[] slimeMoveClips = null;
+    private static float lastSlimeMoveSoundTime = -10f;
+
+    private void PlaySlimeMoveSound()
+    {
+        if (slimeMoveClips == null || slimeMoveClips.Length == 0)
+        {
+            slimeMoveClips = new AudioClip[] {
+                Resources.Load<AudioClip>("Audio/SFX/SFX_SlimeMove_1"),
+                Resources.Load<AudioClip>("Audio/SFX/SFX_SlimeMove_2"),
+                Resources.Load<AudioClip>("Audio/SFX/SFX_SlimeMove_3"),
+                Resources.Load<AudioClip>("Audio/SFX/SFX_SlimeMove_4")
+            };
+        }
+
+        if (Time.time - lastSlimeMoveSoundTime > 0.08f)
+        {
+            lastSlimeMoveSoundTime = Time.time;
+            int rIdx = Random.Range(0, slimeMoveClips.Length);
+            AudioClip clip = slimeMoveClips[rIdx];
+            if (clip == null) clip = Resources.Load<AudioClip>("Audio/SFX/SFX_SlimeMove");
+            if (clip != null)
+            {
+                AudioSource.PlayClipAtPoint(clip, transform.position, 0.70f);
+            }
+        }
+    }
+
     private void UpdatePosition()
     {
         if (GridManager.Instance != null)
         {
             transform.position = GridManager.Instance.GridToWorld(currentPos);
         }
+        PlaySlimeMoveSound();
     }
 }
