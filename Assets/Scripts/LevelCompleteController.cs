@@ -46,14 +46,28 @@ public class LevelCompleteController : MonoBehaviour
         // 2. Set Header Text
         if (levelCompleteText != null)
         {
-            levelCompleteText.text = $"<color=#FFD700><size=72><b>Level {completedLevel} Complete!</b></size></color>";
+            if (completedLevel >= 5)
+            {
+                levelCompleteText.text = "<color=#FFD700><size=72><b>Game Complete!</b></size></color>";
+            }
+            else
+            {
+                levelCompleteText.text = $"<color=#FFD700><size=72><b>Level {completedLevel} Complete!</b></size></color>";
+            }
         }
 
         // 3. Set Random Encouragement Message
-        if (encouragementText != null && encouragementMessages.Length > 0)
+        if (encouragementText != null)
         {
-            string randomMsg = encouragementMessages[Random.Range(0, encouragementMessages.Length)];
-            encouragementText.text = $"<i><color=#5EEAD4>\"{randomMsg}\"</color></i>";
+            if (completedLevel >= 5)
+            {
+                encouragementText.text = "<i><color=#5EEAD4>\"You conquered all time loops! The realm is saved!\"</color></i>";
+            }
+            else if (encouragementMessages.Length > 0)
+            {
+                string randomMsg = encouragementMessages[Random.Range(0, encouragementMessages.Length)];
+                encouragementText.text = $"<i><color=#5EEAD4>\"{randomMsg}\"</color></i>";
+            }
         }
 
         // 4. Spawn Running Mage + Echoes

@@ -291,6 +291,11 @@ public class LoopManager : MonoBehaviour
             Level4CombatController.Instance.ResetState();
         }
 
+        if (Level5BossController.Instance != null)
+        {
+            Level5BossController.Instance.ResetBossState();
+        }
+
         if (pressurePlates == null) pressurePlates = Object.FindObjectsByType<PressurePlate>(FindObjectsSortMode.None);
         foreach (var p in pressurePlates)
         {
@@ -486,31 +491,48 @@ public class LoopManager : MonoBehaviour
         LevelManager lm = LevelManager.Instance ?? Object.FindFirstObjectByType<LevelManager>();
         bool isFinal = (lm != null && lm.IsFinalLevel()) || UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Equals("Level5", System.StringComparison.OrdinalIgnoreCase);
 
-        if (winPanel != null)
+        if (isFinal)
         {
-            winPanel.SetActive(true);
-            TMP_Text winTmp = winPanel.GetComponent<TMP_Text>() ?? winPanel.GetComponentInChildren<TMP_Text>();
-            if (winTmp != null)
+            // Hide default raw text so the custom animated victory screen takes center stage
+            if (winPanel != null) winPanel.SetActive(false);
+
+            FinalVictoryScreen fvs = FinalVictoryScreen.Instance ?? Object.FindFirstObjectByType<FinalVictoryScreen>();
+            if (fvs == null)
             {
-                if (isFinal)
+                Canvas canvas = Object.FindFirstObjectByType<Canvas>();
+                if (canvas != null)
                 {
-                    winTmp.text = "<color=#FFD700><size=36>🏆 CONGRATULATIONS! 🏆</size></color>\n\n<size=24><color=#00FFAA>YOU CONQUERED ALL TIME LOOPS!</color></size>\n\n<size=20><color=#FFFFFF>YOU HAVE WON THE GAME!</color></size>";
-                    winTmp.alignment = TextAlignmentOptions.Center;
+                    GameObject fvsObj = new GameObject("FinalVictoryScreen");
+                    fvsObj.transform.SetParent(canvas.transform, false);
+                    fvs = fvsObj.AddComponent<FinalVictoryScreen>();
                 }
-                else
+            }
+
+            if (fvs != null)
+            {
+                fvs.Show();
+            }
+        }
+        else
+        {
+            if (winPanel != null)
+            {
+                winPanel.SetActive(true);
+                TMP_Text winTmp = winPanel.GetComponent<TMP_Text>() ?? winPanel.GetComponentInChildren<TMP_Text>();
+                if (winTmp != null)
                 {
                     winTmp.text = "<color=#00FFAA><size=36>LEVEL CLEARED!</size></color>";
                     winTmp.alignment = TextAlignmentOptions.Center;
                 }
             }
-        }
-        UpdateUI();
 
-        if (lm != null)
-        {
-            float delay = isFinal ? lm.finalWinTransitionDelay : lm.winTransitionDelay;
-            Invoke(nameof(TransitionToNextLevel), delay);
+            if (lm != null)
+            {
+                Invoke(nameof(TransitionToNextLevel), lm.winTransitionDelay);
+            }
         }
+
+        UpdateUI();
 
         if (AudioManager.Instance != null)
         {
@@ -522,6 +544,13 @@ public class LoopManager : MonoBehaviour
     public void TransitionToNextLevel()
     {
         LevelManager lm = LevelManager.Instance ?? Object.FindFirstObjectByType<LevelManager>();
+        bool isFinal = (lm != null && lm.IsFinalLevel()) || UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Equals("Level5", System.StringComparison.OrdinalIgnoreCase);
+        if (isFinal)
+        {
+            // On final level, victory screen handles replay and navigation
+            return;
+        }
+
         if (lm != null)
         {
             lm.LoadNextLevel();
