@@ -263,6 +263,7 @@ public class LoopManager : MonoBehaviour
         {
             if (ce != null) ce.ResetToStart();
         }
+        CombatEnemy.CleanupLingeringShieldFX();
 
         if (collectibleItems == null) collectibleItems = Object.FindObjectsByType<CollectibleItem>(FindObjectsSortMode.None);
         foreach (var item in collectibleItems)

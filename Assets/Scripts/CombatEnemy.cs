@@ -90,6 +90,8 @@ public class CombatEnemy : MonoBehaviour
         // 2. Spawn crystal shards that gently float and scatter outward
         GameObject fxParent = new GameObject("ShieldShatterFX");
         fxParent.transform.position = transform.position;
+        // Hard engine-level fallback: guarantees destruction after 0.65s regardless of coroutine state
+        Destroy(fxParent, 0.65f);
 
         // Play shield down SFX (debounced so simultaneous guards don't stack volume)
         if (Time.time - lastShieldDownSFXTime > 0.15f)
@@ -135,43 +137,13 @@ public class CombatEnemy : MonoBehaviour
             shards.Add(s.transform);
         }
 
-        // 3. Smoothly animate scattering shards: gentle drift, subtle damping, and soft fade
-        float duration = 0.60f;
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-            // Smooth ease-out fade
-            float currentAlpha = Mathf.SmoothStep(0.95f, 0f, t);
-
-            for (int i = 0; i < shards.Count; i++)
-            {
-                if (shards[i] == null) continue;
-                Vector3 pos = shards[i].localPosition;
-                Vector2 vel = velocities[i];
-
-                // Gentle air resistance / damping for smooth floating motion
-                vel *= Mathf.Clamp01(1f - 0.8f * Time.deltaTime);
-                velocities[i] = vel;
-
-                pos += (Vector3)vel * Time.deltaTime;
-                shards[i].localPosition = pos;
-                shards[i].Rotate(0f, 0f, rotSpeeds[i] * Time.deltaTime);
-                shards[i].localScale = initialScales[i] * Mathf.Lerp(1f, 0.45f, t);
-
-                SpriteRenderer sr = shards[i].GetComponent<SpriteRenderer>();
-                if (sr != null)
-                {
-                    Color c = sr.color;
-                    c.a = currentAlpha;
-                    sr.color = c;
-                }
-            }
-            yield return null;
-        }
-
-        Destroy(fxParent);
+        // Attach runner to fxParent itself so stopping CombatEnemy coroutines will never freeze shards
+        ShieldShatterRunner runner = fxParent.AddComponent<ShieldShatterRunner>();
+        runner.shards = shards;
+        runner.velocities = velocities;
+        runner.rotSpeeds = rotSpeeds;
+        runner.initialScales = initialScales;
+        runner.duration = 0.50f;
     }
 
     private void EnsureShieldVisual()
@@ -292,6 +264,7 @@ public class CombatEnemy : MonoBehaviour
     public void ResetToStart()
     {
         StopAllCoroutines();
+        CleanupLingeringShieldFX();
         isDead = false;
         isAlerted = false;
         isShielded = false;
@@ -598,6 +571,7 @@ public class CombatEnemy : MonoBehaviour
         {
             isDead = true;
             if (shieldVisual != null) shieldVisual.SetActive(false);
+            CleanupLingeringShieldFX();
             Debug.Log("<color=green>Enemy was slain by the player's weapon!</color>");
             StartCoroutine(DeathFadeOut());
         }
@@ -639,5 +613,87 @@ public class CombatEnemy : MonoBehaviour
         }
 
         gameObject.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        CleanupLingeringShieldFX();
+    }
+
+    public static void CleanupLingeringShieldFX()
+    {
+        var allFX = Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+        foreach (var go in allFX)
+        {
+            if (go != null && go.name.StartsWith("ShieldShatterFX"))
+            {
+                go.SetActive(false);
+                if (Application.isPlaying)
+                    Destroy(go);
+                else
+                    DestroyImmediate(go);
+            }
+        }
+    }
+}
+
+public class ShieldShatterRunner : MonoBehaviour
+{
+    public List<Transform> shards;
+    public List<Vector2> velocities;
+    public List<float> rotSpeeds;
+    public List<Vector3> initialScales;
+    public float duration = 0.50f;
+
+    private void Start()
+    {
+        // Hard fallback to guarantee destruction
+        if (Application.isPlaying)
+            Destroy(gameObject, duration + 0.15f);
+        StartCoroutine(AnimateShards());
+    }
+
+    private System.Collections.IEnumerator AnimateShards()
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            float currentAlpha = Mathf.SmoothStep(0.95f, 0f, t);
+
+            if (shards != null)
+            {
+                for (int i = 0; i < shards.Count; i++)
+                {
+                    if (shards[i] == null) continue;
+                    Vector3 pos = shards[i].localPosition;
+                    Vector2 vel = velocities[i];
+
+                    vel *= Mathf.Clamp01(1f - 0.8f * Time.deltaTime);
+                    velocities[i] = vel;
+
+                    pos += (Vector3)vel * Time.deltaTime;
+                    shards[i].localPosition = pos;
+                    shards[i].Rotate(0f, 0f, rotSpeeds[i] * Time.deltaTime);
+                    shards[i].localScale = initialScales[i] * Mathf.Lerp(1f, 0.45f, t);
+
+                    SpriteRenderer sr = shards[i].GetComponent<SpriteRenderer>();
+                    if (sr != null)
+                    {
+                        Color c = sr.color;
+                        c.a = currentAlpha;
+                        sr.color = c;
+                    }
+                }
+            }
+            yield return null;
+        }
+
+        gameObject.SetActive(false);
+        if (Application.isPlaying)
+            Destroy(gameObject);
+        else
+            DestroyImmediate(gameObject);
     }
 }
