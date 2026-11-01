@@ -9,9 +9,21 @@ public class Unit : MonoBehaviour
     public Vector2Int StartGridPosition { get => startGridPosition; set => startGridPosition = value; }
     public Vector2Int GridPosition => gridPosition;
 
+    private MageAnimation mageAnimation;
+
     private void Awake()
     {
         gridPosition = startGridPosition;
+        EnsureAnimationComponent();
+    }
+
+    private void EnsureAnimationComponent()
+    {
+        if (mageAnimation == null)
+        {
+            mageAnimation = GetComponent<MageAnimation>();
+            if (mageAnimation == null) mageAnimation = gameObject.AddComponent<MageAnimation>();
+        }
     }
 
     public void SetStartGridPosition(Vector2Int newStart)
@@ -33,6 +45,60 @@ public class Unit : MonoBehaviour
         SnapToGrid(gridPosition);
     }
 
+    public void MoveToGridPosition(Vector2Int newPos, Vector2Int dir)
+    {
+        Vector2Int oldPos = gridPosition;
+        gridPosition = newPos;
+
+        if (GridManager.Instance != null)
+        {
+            Vector3 startWorld = GridManager.Instance.GridToWorld(oldPos);
+            Vector3 targetWorld = GridManager.Instance.GridToWorld(newPos);
+
+            if (isEcho)
+            {
+                // Echo movement as it was before: instantaneous grid step with directional facing
+                transform.position = targetWorld;
+                transform.localScale = new Vector3(0.75f, 0.75f, 1f);
+
+                SpriteRenderer sr = GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    if (dir.x < 0) sr.flipX = true;
+                    else if (dir.x > 0) sr.flipX = false;
+                }
+
+                if (mageAnimation != null)
+                {
+                    mageAnimation.SnapToBase(targetWorld);
+                }
+            }
+            else
+            {
+                EnsureAnimationComponent();
+                if (mageAnimation != null)
+                {
+                    mageAnimation.PlayHop(startWorld, targetWorld, dir);
+                }
+                else
+                {
+                    transform.position = targetWorld;
+                }
+            }
+        }
+    }
+
+    public void TriggerWallBump(Vector2Int dir)
+    {
+        if (isEcho) return;
+
+        EnsureAnimationComponent();
+        if (mageAnimation != null)
+        {
+            mageAnimation.PlayWallBump(dir);
+        }
+    }
+
     public void SnapToGrid()
     {
         SnapToGrid(gridPosition);
@@ -43,7 +109,16 @@ public class Unit : MonoBehaviour
         gridPosition = targetPos;
         if (GridManager.Instance != null)
         {
-            transform.position = GridManager.Instance.GridToWorld(gridPosition);
+            Vector3 worldPos = GridManager.Instance.GridToWorld(gridPosition);
+            EnsureAnimationComponent();
+            if (mageAnimation != null)
+            {
+                mageAnimation.SnapToBase(worldPos);
+            }
+            else
+            {
+                transform.position = worldPos;
+            }
         }
     }
 }

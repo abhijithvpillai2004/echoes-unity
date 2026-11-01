@@ -19,6 +19,7 @@ public class MoveCommand : ICommand
 
         if (GridManager.Instance != null && !GridManager.Instance.IsWalkable(target))
         {
+            unit.TriggerWallBump(direction);
             return;
         }
 
@@ -27,7 +28,7 @@ public class MoveCommand : ICommand
         {
             if (e != null && e.GetGridPosition() == target)
             {
-                // Enemy physically blocks movement
+                unit.TriggerWallBump(direction);
                 return;
             }
         }
@@ -37,12 +38,12 @@ public class MoveCommand : ICommand
         {
             if (ce != null && !ce.IsDead && ce.GetGridPosition() == target)
             {
-                // Combat enemy blocks movement
+                unit.TriggerWallBump(direction);
                 return;
             }
         }
 
-        unit.SetGridPosition(target);
+        unit.MoveToGridPosition(target, direction);
 
         if (unit.GetComponent<PlayerInputHandler>() != null || (LoopManager.Instance != null && unit == LoopManager.Instance.livePlayer))
         {

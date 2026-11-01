@@ -80,3 +80,12 @@ crashlytics-build.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Project reports, scripts, and media screenshots
+Echoes_Project_Report.*
+Screenshots/
+__pycache__/
+*.pyc
+build_full_report.py
+generate_reports.py
+report_content.py

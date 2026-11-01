@@ -1,0 +1,461 @@
+fileFormatVersion: 2
+guid: 1fa25f6b7aae7e3429cab2dd3ec3c61b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -502801790849480089
+    second: torch_flame_blue_0
+  - first:
+      213: -6010288103607840501
+    second: torch_flame_blue_1
+  - first:
+      213: -1273418612206658730
+    second: torch_flame_blue_2
+  - first:
+      213: -9066964540296800705
+    second: torch_flame_blue_3
+  - first:
+      213: -9066024659409296900
+    second: torch_flame_blue_4
+  - first:
+      213: 779443894010394872
+    second: torch_flame_blue_5
+  - first:
+      213: 115439800370108618
+    second: torch_flame_blue_6
+  - first:
+      213: -2313437084223110571
+    second: torch_flame_blue_7
+  - first:
+      213: 8328895186426050384
+    second: torch_flame_blue_8
+  - first:
+      213: 8738844095288108994
+    second: torch_flame_blue_9
+  - first:
+      213: -7203635872907236488
+    second: torch_flame_blue_10
+  - first:
+      213: 7396831704634414070
+    second: torch_flame_blue_11
+  - first:
+      213: 8470671916197393439
+    second: torch_flame_blue_12
+  - first:
+      213: -502803759585535828
+    second: torch_flame_blue_13
+  - first:
+      213: -7411495278011645512
+    second: torch_flame_blue_14
+  - first:
+      213: 6963237191746313356
+    second: torch_flame_blue_15
+  - first:
+      213: 6496371970676580770
+    second: torch_flame_blue_16
+  - first:
+      213: 7256379536881164819
+    second: torch_flame_blue_17
+  - first:
+      213: -4397448216167727898
+    second: torch_flame_blue_18
+  - first:
+      213: 6359133095641910194
+    second: torch_flame_blue_19
+  - first:
+      213: 8370244199204502399
+    second: torch_flame_blue_20
+  - first:
+      213: 5647443547315498045
+    second: torch_flame_blue_21
+  - first:
+      213: -635857337287385438
+    second: torch_flame_blue_22
+  - first:
+      213: -7015881468925601834
+    second: torch_flame_blue_23
+  - first:
+      213: 8660714304006605047
+    second: torch_flame_blue_24
+  - first:
+      213: 4296190511794308355
+    second: torch_flame_blue_25
+  - first:
+      213: 3171411345586475230
+    second: torch_flame_blue_26
+  - first:
+      213: 7424412369499396162
+    second: torch_flame_blue_27
+  - first:
+      213: 4868273575089596015
+    second: torch_flame_blue_28
+  - first:
+      213: 2644490253005384336
+    second: torch_flame_blue_29
+  - first:
+      213: -8260771348404864741
+    second: torch_flame_blue_30
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 144
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: torch_flame_blue_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 96
+        height: 144
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76a8cf76f60b509f0800000000000000
+      internalID: -502801790849480089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: torch_flame_blue_1
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 96
+        height: 144
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b01d2ba40da279ca0800000000000000
+      internalID: -6010288103607840501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: torch_flame_blue_2
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 96
+        height: 144
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65b1d01e488e35ee0800000000000000
+      internalID: -1273418612206658730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: torch_flame_blue_3
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 96
+        height: 144
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f36db881acbab2280800000000000000
+      internalID: -9066964540296800705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: torch_flame_blue_4
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 96
+        height: 144
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf12afa2b920f2280800000000000000
+      internalID: -9066024659409296900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: torch_flame_blue_5
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 0
+        width: 96
+        height: 144
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f836d8871421da00800000000000000
+      internalID: 779443894010394872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: torch_flame_blue_6
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 96
+        height: 144
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac8900603ef1a9100800000000000000
+      internalID: 115439800370108618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: torch_flame_blue_7
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 0
+        width: 96
+        height: 144
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5528aa0aa3505efd0800000000000000
+      internalID: -2313437084223110571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: torch_flame_blue_8
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 96
+        height: 144
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 057b26e2b0e269370800000000000000
+      internalID: 8328895186426050384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: torch_flame_blue_9
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 0
+        width: 96
+        height: 144
+      alignment: 9
+      pivot: {x: 0.5, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c7ea2f776c964970800000000000000
+      internalID: 8738844095288108994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      torch_flame_blue_0: -502801790849480089
+      torch_flame_blue_1: -6010288103607840501
+      torch_flame_blue_10: -7203635872907236488
+      torch_flame_blue_11: 7396831704634414070
+      torch_flame_blue_12: 8470671916197393439
+      torch_flame_blue_13: -502803759585535828
+      torch_flame_blue_14: -7411495278011645512
+      torch_flame_blue_15: 6963237191746313356
+      torch_flame_blue_16: 6496371970676580770
+      torch_flame_blue_17: 7256379536881164819
+      torch_flame_blue_18: -4397448216167727898
+      torch_flame_blue_19: 6359133095641910194
+      torch_flame_blue_2: -1273418612206658730
+      torch_flame_blue_20: 8370244199204502399
+      torch_flame_blue_21: 5647443547315498045
+      torch_flame_blue_22: -635857337287385438
+      torch_flame_blue_23: -7015881468925601834
+      torch_flame_blue_24: 8660714304006605047
+      torch_flame_blue_25: 4296190511794308355
+      torch_flame_blue_26: 3171411345586475230
+      torch_flame_blue_27: 7424412369499396162
+      torch_flame_blue_28: 4868273575089596015
+      torch_flame_blue_29: 2644490253005384336
+      torch_flame_blue_3: -9066964540296800705
+      torch_flame_blue_30: -8260771348404864741
+      torch_flame_blue_4: -9066024659409296900
+      torch_flame_blue_5: 779443894010394872
+      torch_flame_blue_6: 115439800370108618
+      torch_flame_blue_7: -2313437084223110571
+      torch_flame_blue_8: 8328895186426050384
+      torch_flame_blue_9: 8738844095288108994
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

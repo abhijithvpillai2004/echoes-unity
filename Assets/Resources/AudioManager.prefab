@@ -242,7 +242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   masterVolume: 1
   titleMusicVolume: 0.21
-  gameplayMusicVolume: 0
+  gameplayMusicVolume: 0.58
   footstepVolume: 0.5
   waitVolume: 1
   buttonClickVolume: 0.25
