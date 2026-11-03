@@ -220,40 +220,10 @@ public class MageAnimation : MonoBehaviour
         );
         float rotSpeed = Random.Range(-220f, 220f);
 
-        StartCoroutine(AnimateGroundSpark(sparkObj, sr, velocity, rotSpeed, baseCol, sparkLifetime));
-    }
-
-    private IEnumerator AnimateGroundSpark(GameObject obj, SpriteRenderer sr, Vector3 velocity, float rotSpeed, Color baseCol, float duration)
-    {
-        float timer = 0f;
-        float maxScale = Random.Range(0.30f, 0.45f);
-
-        while (timer < duration)
-        {
-            timer += Time.deltaTime;
-            float t = timer / duration;
-
-            if (obj != null && sr != null)
-            {
-                obj.transform.position += velocity * Time.deltaTime;
-                obj.transform.Rotate(0f, 0f, rotSpeed * Time.deltaTime);
-
-                // Flare up quickly then shrink
-                float scale = Mathf.Sin(t * Mathf.PI) * maxScale;
-                obj.transform.localScale = Vector3.one * scale;
-
-                Color c = baseCol;
-                c.a = Mathf.Lerp(baseCol.a, 0f, t);
-                sr.color = c;
-            }
-
-            yield return null;
-        }
-
-        if (obj != null)
-        {
-            Destroy(obj);
-        }
+        // Self-contained lifecycle component: runs its own animation independent of the player/echo
+        // and includes hard engine-level auto-destruction so it can NEVER get stuck on a tile.
+        GroundSparkMote mote = sparkObj.AddComponent<GroundSparkMote>();
+        mote.Initialize(sr, velocity, rotSpeed, baseCol, sparkLifetime);
     }
 
     /// <summary>
@@ -363,5 +333,52 @@ public class MageAnimation : MonoBehaviour
         }
         tex.Apply();
         return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 32f);
+    }
+}
+
+/// <summary>
+/// Self-contained runner for ground rune spark motes.
+/// Runs independently of player or echo GameObjects so interruptions (echo removal, loop reset,
+/// damage, or fast directional turns) never orphan frozen sparks on tiles.
+/// </summary>
+public class GroundSparkMote : MonoBehaviour
+{
+    public void Initialize(SpriteRenderer sr, Vector3 velocity, float rotSpeed, Color baseCol, float duration)
+    {
+        // 1. Engine-level safeguard: Native Unity C++ lifecycle guarantees destruction even if all scripts or coroutines freeze
+        Destroy(gameObject, duration + 0.1f);
+
+        // 2. Self-driven animation coroutine running directly on the spark mote itself
+        StartCoroutine(Animate(sr, velocity, rotSpeed, baseCol, duration));
+    }
+
+    private System.Collections.IEnumerator Animate(SpriteRenderer sr, Vector3 velocity, float rotSpeed, Color baseCol, float duration)
+    {
+        float timer = 0f;
+        float maxScale = UnityEngine.Random.Range(0.30f, 0.45f);
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / duration;
+
+            if (sr != null)
+            {
+                transform.position += velocity * Time.deltaTime;
+                transform.Rotate(0f, 0f, rotSpeed * Time.deltaTime);
+
+                // Flare up smoothly then fade and shrink
+                float scale = Mathf.Sin(t * Mathf.PI) * maxScale;
+                transform.localScale = Vector3.one * scale;
+
+                Color c = baseCol;
+                c.a = Mathf.Lerp(baseCol.a, 0f, t);
+                sr.color = c;
+            }
+
+            yield return null;
+        }
+
+        Destroy(gameObject);
     }
 }
