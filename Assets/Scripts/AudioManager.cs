@@ -68,6 +68,7 @@ public class AudioManager : MonoBehaviour
     [Range(0f, 1f)] public float victoryVolume = 1.0f;
     [Range(0f, 1f)] public float gameOverVolume = 1.0f;
     [Range(0f, 1f)] public float transitionVolume = 0.9f;
+    [Range(0f, 1f)] public float poisonDamageVolume = 0.85f;
 
     [Header("Audio Sources")]
     [SerializeField] private AudioSource bgmSource;
@@ -92,6 +93,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip sfxVictoryFinal;
     public AudioClip sfxTransition1;
     public AudioClip sfxTransition2;
+    public AudioClip sfxPoisonDamage;
 
     private AudioListener fallbackListener;
     public enum BgmType { None, Title, Gameplay }
@@ -164,6 +166,7 @@ public class AudioManager : MonoBehaviour
             _instance.victoryVolume = this.victoryVolume;
             _instance.gameOverVolume = this.gameOverVolume;
             _instance.transitionVolume = this.transitionVolume;
+            _instance.poisonDamageVolume = this.poisonDamageVolume;
             _instance.ApplyLiveVolume();
         }
         // 2. If user moves sliders on the live GameObject in Hierarchy while playing:
@@ -200,6 +203,7 @@ public class AudioManager : MonoBehaviour
                 am.victoryVolume = this.victoryVolume;
                 am.gameOverVolume = this.gameOverVolume;
                 am.transitionVolume = this.transitionVolume;
+                am.poisonDamageVolume = this.poisonDamageVolume;
                 EditorUtility.SetDirty(prefab);
             }
         }
@@ -259,6 +263,7 @@ public class AudioManager : MonoBehaviour
         if (sfxVictoryFinal == null) sfxVictoryFinal = Resources.Load<AudioClip>("Audio/SFX/SFX_VictoryFinal");
         if (sfxTransition1 == null) sfxTransition1 = Resources.Load<AudioClip>("Audio/SFX/SFX_Transition_1");
         if (sfxTransition2 == null) sfxTransition2 = Resources.Load<AudioClip>("Audio/SFX/SFX_Transition_2");
+        if (sfxPoisonDamage == null) sfxPoisonDamage = Resources.Load<AudioClip>("Audio/SFX/SFX_SpikeDamage");
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -354,6 +359,7 @@ public class AudioManager : MonoBehaviour
     public void PlayChestOpen() => PlaySFX(sfxChestOpen, chestOpenVolume);
     public void PlaySwordSwing() => PlaySFX(sfxSwordSwing, swordSwingVolume);
     public void PlayItemCollect() => PlaySFX(sfxItemCollect, itemCollectVolume);
+    public void PlayPoisonDamage() => PlaySFX(sfxPoisonDamage, poisonDamageVolume);
 
     public void PlayGameOver()
     {

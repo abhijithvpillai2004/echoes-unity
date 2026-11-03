@@ -55,35 +55,14 @@ public class Unit : MonoBehaviour
             Vector3 startWorld = GridManager.Instance.GridToWorld(oldPos);
             Vector3 targetWorld = GridManager.Instance.GridToWorld(newPos);
 
-            if (isEcho)
+            EnsureAnimationComponent();
+            if (mageAnimation != null)
             {
-                // Echo movement as it was before: instantaneous grid step with directional facing
-                transform.position = targetWorld;
-                transform.localScale = new Vector3(0.75f, 0.75f, 1f);
-
-                SpriteRenderer sr = GetComponent<SpriteRenderer>();
-                if (sr != null)
-                {
-                    if (dir.x < 0) sr.flipX = true;
-                    else if (dir.x > 0) sr.flipX = false;
-                }
-
-                if (mageAnimation != null)
-                {
-                    mageAnimation.SnapToBase(targetWorld);
-                }
+                mageAnimation.PlayHop(startWorld, targetWorld, dir);
             }
             else
             {
-                EnsureAnimationComponent();
-                if (mageAnimation != null)
-                {
-                    mageAnimation.PlayHop(startWorld, targetWorld, dir);
-                }
-                else
-                {
-                    transform.position = targetWorld;
-                }
+                transform.position = targetWorld;
             }
         }
     }

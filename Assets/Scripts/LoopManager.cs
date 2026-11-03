@@ -448,6 +448,12 @@ public class LoopManager : MonoBehaviour
             if (trap != null && livePlayer != null) trap.CheckUnitTrigger(livePlayer);
         }
 
+        // 4b. Tick poison if player is poisoned
+        if (PlayerHealth.Instance != null && livePlayer != null)
+        {
+            PlayerHealth.Instance.OnPlayerStepTurn();
+        }
+
         // 5. Step enemies (which react to echoes and player)
         if (enemies == null) enemies = Object.FindObjectsByType<EnemyPatrol>(FindObjectsSortMode.None);
         if (enemies != null)
