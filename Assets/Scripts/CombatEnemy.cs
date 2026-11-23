@@ -539,6 +539,8 @@ public class CombatEnemy : MonoBehaviour
     private void AttackTarget(Unit target)
     {
         hitCount++;
+        DarkBossAura bossAura = GetComponent<DarkBossAura>();
+        if (bossAura != null) bossAura.ShowHealthBarBriefly();
         if (target != null && !target.isEcho)
         {
             Debug.Log($"<color=red>Enemy attacked live player! (Hit {hitCount}/{maxHitsAgainstPlayer})</color>");
@@ -567,6 +569,8 @@ public class CombatEnemy : MonoBehaviour
     {
         if (isDead) return;
         currentEnemyHP--;
+        DarkBossAura bossAura = GetComponent<DarkBossAura>();
+        if (bossAura != null) bossAura.ShowHealthBarBriefly();
         if (currentEnemyHP <= 0)
         {
             isDead = true;
