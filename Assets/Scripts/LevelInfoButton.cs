@@ -144,8 +144,8 @@ public class LevelInfoButton : MonoBehaviour
                        "<color=#FFCC00><b>INTEL & CLUES:</b></color>\nThe Twin Sentries' enchanted armor deflects physical strikes, and the Citadel Gate yields only to their defeat. Seek the armory, and find a way to disrupt their barrier before engaging in battle.";
 
             case "level5":
-                return "<color=#00FFAA><b>OBJECTIVE:</b></color>\nConquer the Core Chamber.\n\n" +
-                       "<color=#FFCC00><b>INTEL & CLUES:</b></color>\nThe ultimate trial demands complete coordination between every echo you leave behind. Overcome the guardian to expose the core.";
+                return "<color=#00FFAA><b>OBJECTIVE:</b></color>\nVanquish your Alter Echo to break the time loop.\n\n" +
+                       "<color=#FFCC00><b>INTEL & CLUES:</b></color>\nA dark echo of yourself guards the final chamber, wreathed in occult flames. It takes 3 strikes to vanquish him. Coordinate your past echoes to strike your dark reflection and break the loop forever.";
 
             default:
                 return "<color=#00FFAA><b>OBJECTIVE:</b></color>\nReach the goal tile using your echoes!";

@@ -17,7 +17,7 @@ using UnityEngine;
 public class DarkBossAura : MonoBehaviour
 {
     [Header("Aura Flame Config")]
-    public float flameAnimationFps = 10f;
+    public float flameAnimationFps = 8f; // Balanced, fluid, imposing boss aura cadence (1.25s loop)
     public Color innerFlameColor = new Color(0.92f, 0.75f, 1.0f, 0.95f); // Light glowing lilac inner core
     public Color outerFlameColor = new Color(0.38f, 0.08f, 0.60f, 1.0f); // Deep dark purple outer rim & tips
 
